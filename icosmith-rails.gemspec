@@ -17,5 +17,9 @@ Gem::Specification.new do |gem|
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
   gem.require_paths = ["lib"]
 
+  gem.add_dependency "rest-client"
+  gem.add_dependency "rubyzip"
+
   gem.add_development_dependency "rspec"
+  gem.add_development_dependency "debugger"
 end
