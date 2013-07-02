@@ -6,21 +6,22 @@ module Icosmith
     TEMP_DIR = "/tmp/icosmith"
     FONT_DIR = "/tmp/fonts"
     CSS_DIR = "/tmp/css"
+    MANIFEST = "#{SRC_DIR}/manifest.json"
     ICOSMITH_GENERATE_FONTS_URL = "http://localhost:3000/generate_font"
 
-    MANIFEST = "#{SRC_DIR}/manifest.json"
     SVG_ZIPFILE = "#{TEMP_DIR}/svg.zip"
     FONTS_ZIPFILE = "#{TEMP_DIR}/fonts.zip"
 
     def self.create_svg_zipfile
       FileUtils.rm_f(SVG_ZIPFILE)
+      FileUtils.mkdir_p(TEMP_DIR)
 
       Zip::ZipFile.open(SVG_ZIPFILE, Zip::ZipFile::CREATE) do |zipfile|
         Dir.glob("#{SRC_DIR}/*.svg").each do |filename|
           zipfile.add(filename.split("/").last, filename)
         end
 
-        zipfile.add(MANIFEST.split("/").last, MANIFEST)
+        zipfile.add(MANIFEST.split("/").last, MANIFEST) if File.exists?(MANIFEST)
       end
     end
 
@@ -46,7 +47,8 @@ module Icosmith
         end
       end
 
-      manifest = JSON.parse(File.read(File.join(TEMP_DIR, "manifest.json")))
+      manifest_tempfile = File.join(TEMP_DIR, "manifest.json")
+      manifest = JSON.parse(File.read(manifest_tempfile))
       family_name = manifest["family"].gsub(" ", "")
       weight = manifest["weight"] || "Regular"
       font_basename = "#{family_name}-#{weight}"
@@ -57,6 +59,8 @@ module Icosmith
       Dir.glob("#{TEMP_DIR}/#{font_basename}.{ttf,woff,svg,eot,afm}").each do |file|
         FileUtils.mv(file, FONT_DIR)
       end
+      FileUtils.mv(manifest_tempfile, MANIFEST)
+      FileUtils.remove_dir(TEMP_DIR)
     end
   end
 end
