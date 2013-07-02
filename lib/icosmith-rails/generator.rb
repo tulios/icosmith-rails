@@ -1,17 +1,16 @@
 # -*- coding: utf-8 -*-
 
-# svg: "app/icosmith/svg"
-# manifest: "app/icosmith/manifest.json"
-# font: "app/assets/fonts"
-
 module Icosmith
   class Generator
     SRC_DIR = "/tmp/svg"
-    DEST_DIR = "/tmp/fonts"
-    MANIFEST = "#{SRC_DIR}/manifest.json"
-    SVG_ZIPFILE = "#{DEST_DIR}/svg.zip"
-    FONTS_ZIPFILE = "#{DEST_DIR}/fonts.zip"
+    TEMP_DIR = "/tmp/icosmith"
+    FONT_DIR = "/tmp/fonts"
+    CSS_DIR = "/tmp/css"
     ICOSMITH_GENERATE_FONTS_URL = "http://localhost:3000/generate_font"
+
+    MANIFEST = "#{SRC_DIR}/manifest.json"
+    SVG_ZIPFILE = "#{TEMP_DIR}/svg.zip"
+    FONTS_ZIPFILE = "#{TEMP_DIR}/fonts.zip"
 
     def self.create_svg_zipfile
       FileUtils.rm_f(SVG_ZIPFILE)
@@ -34,12 +33,36 @@ module Icosmith
       File.open(FONTS_ZIPFILE, "w") do |f|
         f.write(fontfile_contents)
       end
+
+      extract_fonts
     end
 
     private
     def self.create_manifest
       File.open(MANIFEST, "w") do |f|
-        f.write('{"name": "icosmith", "family": "FontSmith Font", "version": "1.0", "copyright": "", "glyphs": []}')
+        f.write('{"name": "icosmith", "family": "FontSmith Font", "weight": "Regular", "version": "1.0", "copyright": "", "glyphs": []}')
+      end
+    end
+
+    def self.extract_fonts
+      Zip::ZipFile.open(FONTS_ZIPFILE) do |zip_file|
+        zip_file.each do |file|
+          dest_path = File.join(TEMP_DIR, file.name)
+          FileUtils.rm_f(dest_path)
+          zip_file.extract(file, dest_path)
+        end
+      end
+
+      manifest = JSON.parse(File.read(File.join(TEMP_DIR, "manifest.json")))
+      family_name = manifest["family"].gsub(" ", "")
+      weight = manifest["weight"] || "Regular"
+      font_basename = "#{family_name}-#{weight}"
+
+      FileUtils.mkdir_p(FONT_DIR)
+      FileUtils.mkdir_p(CSS_DIR)
+      FileUtils.mv("#{TEMP_DIR}/#{font_basename}.css", CSS_DIR)
+      Dir.glob("#{TEMP_DIR}/#{font_basename}.{ttf,woff,svg,eot,afm}").each do |file|
+        FileUtils.mv(file, FONT_DIR)
       end
     end
   end
