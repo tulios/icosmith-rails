@@ -14,7 +14,6 @@ module Icosmith
 
     def self.create_svg_zipfile
       FileUtils.rm_f(SVG_ZIPFILE)
-      create_manifest
 
       Zip::ZipFile.open(SVG_ZIPFILE, Zip::ZipFile::CREATE) do |zipfile|
         Dir.glob("#{SRC_DIR}/*.svg").each do |filename|
@@ -38,12 +37,6 @@ module Icosmith
     end
 
     private
-    def self.create_manifest
-      File.open(MANIFEST, "w") do |f|
-        f.write('{"name": "icosmith", "family": "FontSmith Font", "weight": "Regular", "version": "1.0", "copyright": "", "glyphs": []}')
-      end
-    end
-
     def self.extract_fonts
       Zip::ZipFile.open(FONTS_ZIPFILE) do |zip_file|
         zip_file.each do |file|
