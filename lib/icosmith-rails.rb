@@ -15,4 +15,5 @@ module Icosmith
 end
 
 require "icosmith-rails/version"
+require "icosmith-rails/config"
 require "icosmith-rails/generator"

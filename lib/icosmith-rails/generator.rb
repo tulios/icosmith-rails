@@ -2,13 +2,15 @@
 
 module Icosmith
   class Generator
-    SRC_DIR = "/tmp/svg"
-    TEMP_DIR = "/tmp/icosmith"
-    FONT_DIR = "/tmp/fonts"
-    CSS_DIR = "/tmp/css"
-    MANIFEST = "#{SRC_DIR}/manifest.json"
-    ICOSMITH_GENERATE_FONTS_URL = "http://localhost:3000/generate_font"
+    SRC_DIR = Icosmith.config.svg_dir
+    FONT_DIR = Icosmith.config.font_dir
+    CSS_DIR = Icosmith.config.css_dir
+    MANIFEST_DIR = Icosmith.config.manifest_dir
+    ICOSMITH_GENERATE_FONTS_URL = Icosmith.config.generate_fonts_url
 
+    MANIFEST_FILENAME = "manifest.json"
+    MANIFEST_FULL_PATH = File.join(MANIFEST_DIR, MANIFEST_FILENAME)
+    TEMP_DIR = Dir.mktmpdir("icosmith")
     SVG_ZIPFILE = "#{TEMP_DIR}/svg.zip"
     FONTS_ZIPFILE = "#{TEMP_DIR}/fonts.zip"
 
@@ -21,7 +23,7 @@ module Icosmith
           zipfile.add(filename.split("/").last, filename)
         end
 
-        zipfile.add(MANIFEST.split("/").last, MANIFEST) if File.exists?(MANIFEST)
+        zipfile.add(MANIFEST_FILENAME, MANIFEST_FULL_PATH) if File.exists?(MANIFEST_FULL_PATH)
       end
     end
 
@@ -47,10 +49,10 @@ module Icosmith
         end
       end
 
-      manifest_tempfile = File.join(TEMP_DIR, "manifest.json")
-      manifest = JSON.parse(File.read(manifest_tempfile))
-      family_name = manifest["family"].gsub(" ", "")
-      weight = manifest["weight"] || "Regular"
+      manifest_tempfile = File.join(TEMP_DIR, MANIFEST_FILENAME)
+      manifest_contents = JSON.parse(File.read(manifest_tempfile))
+      family_name = manifest_contents["family"].gsub(" ", "")
+      weight = manifest_contents["weight"] || "Regular"
       font_basename = "#{family_name}-#{weight}"
 
       FileUtils.mkdir_p(FONT_DIR)
@@ -59,7 +61,7 @@ module Icosmith
       Dir.glob("#{TEMP_DIR}/#{font_basename}.{ttf,woff,svg,eot,afm}").each do |file|
         FileUtils.mv(file, FONT_DIR)
       end
-      FileUtils.mv(manifest_tempfile, MANIFEST)
+      FileUtils.mv(manifest_tempfile, MANIFEST_FULL_PATH)
       FileUtils.remove_dir(TEMP_DIR)
     end
   end
