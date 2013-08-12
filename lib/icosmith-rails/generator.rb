@@ -7,16 +7,21 @@ module Icosmith
     FONTS_ZIPFILENAME = "fonts.zip"
 
     def initialize
-      config_filename = File.join(Rails.root, "config", "icosmith.yml")
+      config_filename = File.join(Rails.root, "config", "icosmith", Icosmith::Config::FILENAME)
       @config = Icosmith::Config.load(config_filename)
 
-      @manifest_full_path = File.join(@config.manifest_dir, MANIFEST_FILENAME)
-      @src_dir = @config.svg_dir
+      @manifest_full_path = File.join(Rails.root, @config.manifest_dir, MANIFEST_FILENAME)
+      @src_dir = File.join(Rails.root, @config.svg_dir)
 
       @temp_dir = File.join(Rails.root, "tmp", "icosmith")
-      FileUtils.mkdir_p(@temp_dir)
       @svg_zipfile = File.join(@temp_dir, SVG_ZIPFILENAME)
       @fonts_zipfile = File.join(@temp_dir, FONTS_ZIPFILENAME)
+      @css_dir = File.join(Rails.root, @config.css_dir)
+      @font_dir = File.join(Rails.root, @config.font_dir)
+
+      FileUtils.mkdir_p(@temp_dir)
+      FileUtils.mkdir_p(@css_dir)
+      FileUtils.mkdir_p(@font_dir)
     end
 
     def create_svg_zipfile
@@ -57,11 +62,11 @@ module Icosmith
       weight = manifest_contents["weight"] || "Regular"
       font_basename = "#{family_name}-#{weight}"
 
-      FileUtils.mkdir_p(@config.font_dir)
-      FileUtils.mkdir_p(@config.css_dir)
-      FileUtils.mv("#{@temp_dir}/#{font_basename}.css", @config.css_dir)
+      FileUtils.mkdir_p(@font_dir)
+      FileUtils.mkdir_p(@css_dir)
+      FileUtils.mv("#{@temp_dir}/#{font_basename}.css", @css_dir)
       Dir.glob("#{@temp_dir}/#{font_basename}.{ttf,woff,svg,eot,afm}").each do |file|
-        FileUtils.mv(file, @config.font_dir)
+        FileUtils.mv(file, @font_dir)
       end
       FileUtils.mv(manifest_tempfile, @manifest_full_path)
       FileUtils.remove_dir(@temp_dir)

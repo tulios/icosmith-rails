@@ -18,9 +18,12 @@ Or install it yourself as:
 
 ## Configuration
 
-Add a `config/icosmith.yml` file to your application, like the template on this project. Change the parameters according to your project. `generate_fonts_url` is Icosmith's post URL.
+Create a `config/icosmith` directory in your Rails application. This directory should have 2 files:
 
-Alternatively, you can configure each parameter individually. Just call `Icosmith.configure` with a block:
+   * `manifest.json`. It should contain the font configurations, like the example on this project's root;
+   * `icosmith.yml`. Copy the example file from this project's root and change the parameters according to your project. `generate_fonts_url` is Icosmith's post URL.
+
+You can also configure each parameter individually. Just call `Icosmith.configure` with a block:
 
     Icosmith.configure do |config|
       config.generate_fonts_url = "http://new-url.com"

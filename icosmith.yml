@@ -1,5 +1,5 @@
-svg_dir: /tmp/svg
-font_dir: /tmp/fonts
-css_dir: /tmp/css
-manifest_dir: /tmp/svg
+svg_dir: app/assets/fonts/icosmith-font/svg
+font_dir: app/assets/fonts/icosmith-font
+css_dir: app/assets/stylesheets/icosmith-font
+manifest_dir: config/icosmith
 generate_fonts_url: http://localhost:3000/generate_font
