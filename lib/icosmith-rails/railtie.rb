@@ -9,5 +9,22 @@ module Icosmith
     rake_tasks do
       load "tasks/icosmith.rake"
     end
+
+    initializer "icosmith.load-config" do |app|
+      config_file = Rails.root.join("config", "icosmith.yml")
+      if config_file.file?
+        begin
+          Icosmith::Config.load(config_file)
+        rescue Exception => e
+          handle_configuration_error(e)
+        end
+      end
+    end
+
+    def handle_configuration_error(e)
+      puts "There is a configuration error with the current icosmith.yml."
+      puts e.inspect
+      puts e.message
+    end
   end
 end

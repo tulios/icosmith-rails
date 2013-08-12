@@ -2,17 +2,19 @@
 
 module Icosmith
   class Generator
-    SRC_DIR = Icosmith.config.svg_dir
-    FONT_DIR = Icosmith.config.font_dir
-    CSS_DIR = Icosmith.config.css_dir
-    MANIFEST_DIR = Icosmith.config.manifest_dir
-    ICOSMITH_GENERATE_FONTS_URL = Icosmith.config.generate_fonts_url
-
     MANIFEST_FILENAME = "manifest.json"
-    MANIFEST_FULL_PATH = File.join(MANIFEST_DIR, MANIFEST_FILENAME)
     TEMP_DIR = Dir.mktmpdir("icosmith")
     SVG_ZIPFILE = "#{TEMP_DIR}/svg.zip"
     FONTS_ZIPFILE = "#{TEMP_DIR}/fonts.zip"
+
+    def config
+      src_dir = Icosmith.config.svg_dir
+      font_dir = Icosmith.config.font_dir
+      css_dir = Icosmith.config.css_dir
+      manifest_dir = Icosmith.config.manifest_dir
+      icosmith_generate_fonts_url = Icosmith.config.generate_fonts_url
+      manifest_full_path = File.join(MANIFEST_DIR, MANIFEST_FILENAME)
+    end
 
     def self.create_svg_zipfile
       FileUtils.rm_f(SVG_ZIPFILE)
