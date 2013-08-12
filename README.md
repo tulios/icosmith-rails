@@ -1,6 +1,6 @@
 # icosmith-rails gem
 
-TODO: Write a gem description
+Creates a rake task to generate a new font from svg files
 
 ## Installation
 
@@ -16,9 +16,19 @@ Or install it yourself as:
 
     $ gem install icosmith-rails
 
+## Configuration
+
+Add a `config/icosmith.yml` file to your application, like the template on this project. Change the parameters according to your project. `generate_fonts_url` is Icosmith's post URL.
+
+Alternatively, you can configure each parameter individually. Just call `Icosmith.configure` with a block:
+
+    Icosmith.configure do |config|
+      config.generate_fonts_url = "http://new-url.com"
+    end
+
 ## Usage
 
-TODO: Write usage instructions here
+    rake icosmith:generate
 
 ## Contributing
 
