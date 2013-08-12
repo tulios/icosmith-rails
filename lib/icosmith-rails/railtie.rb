@@ -12,12 +12,10 @@ module Icosmith
 
     initializer "icosmith.load-config" do |app|
       config_file = Rails.root.join("config", "icosmith.yml")
-      if config_file.file?
-        begin
-          Icosmith::Config.load(config_file)
-        rescue Exception => e
-          handle_configuration_error(e)
-        end
+      begin
+        Icosmith::Config.load(config_file)
+      rescue Exception => e
+        handle_configuration_error(e)
       end
     end
 

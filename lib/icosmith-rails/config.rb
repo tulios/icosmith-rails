@@ -14,6 +14,8 @@ module Icosmith
       KEYS.each do |key|
         Icosmith.config.send("#{key}=", settings[key.to_s]) if settings.has_key?(key.to_s)
       end
+
+      Icosmith.config
     end
   end
 
