@@ -32,9 +32,7 @@ module Icosmith
     end
 
     def generate_font
-      contents = File.read(@svg_zipfile)
-      base64 = Base64.encode64 contents
-      fontfile_contents = RestClient.post(@config.generate_fonts_url, base64zip: base64)
+      fontfile_contents = RestClient.post(@config.generate_fonts_url, file: File.new(@svg_zipfile))
 
       File.open(@fonts_zipfile, "w:binary") do |f|
         f.write(fontfile_contents)

@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 require "zip/zip"
-require "base64"
 require "rest_client"
 require "json"
 require "debugger" if ENV["RACK_ENV"] == "test"
