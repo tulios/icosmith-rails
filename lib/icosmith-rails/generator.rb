@@ -28,8 +28,8 @@ module Icosmith
       FileUtils.rm_f(@svg_zipfile)
 
       Zip::ZipFile.open(@svg_zipfile, Zip::ZipFile::CREATE) do |zipfile|
-        Dir.glob("#{@src_dir}/*.svg").each do |filename|
-          zipfile.add(filename.split("/").last, filename)
+        Dir.glob("#{@src_dir}#{File::SEPARATOR}*.svg").each do |filename|
+          zipfile.add(filename.split(File::SEPARATOR).last, filename)
         end
 
         zipfile.add(MANIFEST_FILENAME, @manifest_full_path) if File.exists?(@manifest_full_path)
@@ -64,8 +64,8 @@ module Icosmith
 
       FileUtils.mkdir_p(@font_dir)
       FileUtils.mkdir_p(@css_dir)
-      FileUtils.mv("#{@temp_dir}/#{font_basename}.css", @css_dir)
-      Dir.glob("#{@temp_dir}/#{font_basename}.{ttf,woff,svg,eot,afm}").each do |file|
+      FileUtils.mv("#{@temp_dir}#{File::SEPARATOR}#{font_basename}.css", @css_dir)
+      Dir.glob("#{@temp_dir}#{File::SEPARATOR}#{font_basename}.{ttf,woff,svg,eot,afm}").each do |file|
         FileUtils.mv(file, @font_dir)
       end
       FileUtils.mv(manifest_tempfile, @manifest_full_path)
