@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 
 module Icosmith
+  CONFIG_FILENAME = "icosmith.yml"
+  MANIFEST_FILENAME = "manifest.json"
+
   class Config
-    FILENAME = "icosmith.yml"
     KEYS = [:svg_dir, :font_dir, :css_dir, :manifest_dir, :generate_fonts_url]
 
     KEYS.each do |key|

@@ -11,7 +11,7 @@ module Icosmith
     end
 
     initializer "icosmith.load-config" do |app|
-      config_file = Rails.root.join("config", "icosmith", Icosmith::Config::FILENAME)
+      config_file = Rails.root.join("config", "icosmith", Icosmith::CONFIG_FILENAME)
       begin
         Icosmith::Config.load(config_file)
       rescue Exception => e
@@ -20,7 +20,7 @@ module Icosmith
     end
 
     def handle_configuration_error(e)
-      puts "There is a configuration error with the current #{Icosmith::Config::FILENAME}."
+      puts "There is a configuration error with the current #{Icosmith::CONFIG_FILENAME}."
       puts e.inspect
       puts e.message
     end

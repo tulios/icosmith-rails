@@ -2,26 +2,13 @@
 
 module Icosmith
   class Generator
-    MANIFEST_FILENAME = "manifest.json"
     SVG_ZIPFILENAME = "svg.zip"
     FONTS_ZIPFILENAME = "fonts.zip"
 
     def initialize
-      config_filename = File.join(Rails.root, "config", "icosmith", Icosmith::Config::FILENAME)
-      @config = Icosmith::Config.load(config_filename)
-
-      @manifest_full_path = File.join(Rails.root, @config.manifest_dir, MANIFEST_FILENAME)
-      @src_dir = File.join(Rails.root, @config.svg_dir)
-
-      @temp_dir = File.join(Rails.root, "tmp", "icosmith")
-      @svg_zipfile = File.join(@temp_dir, SVG_ZIPFILENAME)
-      @fonts_zipfile = File.join(@temp_dir, FONTS_ZIPFILENAME)
-      @css_dir = File.join(Rails.root, @config.css_dir)
-      @font_dir = File.join(Rails.root, @config.font_dir)
-
-      FileUtils.mkdir_p(@temp_dir)
-      FileUtils.mkdir_p(@css_dir)
-      FileUtils.mkdir_p(@font_dir)
+      load_config
+      setup_parameters
+      create_directories
     end
 
     def create_svg_zipfile
@@ -32,7 +19,7 @@ module Icosmith
           zipfile.add(filename.split(File::SEPARATOR).last, filename)
         end
 
-        zipfile.add(MANIFEST_FILENAME, @manifest_full_path) if File.exists?(@manifest_full_path)
+        zipfile.add(Icosmith::MANIFEST_FILENAME, @manifest_full_path) if File.exists?(@manifest_full_path)
       end
     end
 
@@ -47,6 +34,37 @@ module Icosmith
     end
 
     private
+    def load_config
+      config_filename = File.join(Rails.root, "config", "icosmith", Icosmith::CONFIG_FILENAME)
+      begin
+        @config = Icosmith::Config.load(config_filename)
+      rescue Exception => e
+        puts "Error trying to load icosmith configuration file: #{e.message}"
+        exit 1
+      end
+
+      @manifest_full_path = File.join(Rails.root, @config.manifest_dir, Icosmith::MANIFEST_FILENAME)
+      unless File.readable?(@manifest_full_path)
+        puts "Error trying to load manifest file"
+        exit 1
+      end
+    end
+
+    def setup_parameters
+      @src_dir = File.join(Rails.root, @config.svg_dir)
+      @temp_dir = File.join(Rails.root, "tmp", "icosmith")
+      @svg_zipfile = File.join(@temp_dir, SVG_ZIPFILENAME)
+      @fonts_zipfile = File.join(@temp_dir, FONTS_ZIPFILENAME)
+      @css_dir = File.join(Rails.root, @config.css_dir)
+      @font_dir = File.join(Rails.root, @config.font_dir)
+    end
+
+    def create_directories
+      FileUtils.mkdir_p(@temp_dir)
+      FileUtils.mkdir_p(@css_dir)
+      FileUtils.mkdir_p(@font_dir)
+    end
+
     def extract_fonts
       Zip::ZipFile.open(@fonts_zipfile) do |zip_file|
         zip_file.each do |file|
@@ -56,7 +74,7 @@ module Icosmith
         end
       end
 
-      manifest_tempfile = File.join(@temp_dir, MANIFEST_FILENAME)
+      manifest_tempfile = File.join(@temp_dir, Icosmith::MANIFEST_FILENAME)
       manifest_contents = JSON.parse(File.read(manifest_tempfile))
       family_name = manifest_contents["family"].gsub(" ", "")
       weight = manifest_contents["weight"] || "Regular"
