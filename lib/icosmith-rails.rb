@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 
-require "zip/zip"
+require "zip"
 require "rest_client"
 require "json"
-require "debugger" if ENV["RACK_ENV"] == "test"
+require "logger"
+require "byebug" if ENV["RACK_ENV"] == "test"
 
 module Icosmith
   extend self

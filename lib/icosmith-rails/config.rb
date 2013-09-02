@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 
 module Icosmith
-  CONFIG_FILENAME = "icosmith.yml"
+  CONFIG_FILENAME   = "icosmith.yml"
   MANIFEST_FILENAME = "manifest.json"
 
   class Config
-    KEYS = [:svg_dir, :font_dir, :css_dir, :manifest_dir, :generate_fonts_url]
+    KEYS = [:svg_dir, :font_dir, :css_dir, :manifest_dir, :generate_fonts_url, :use_sass]
 
     KEYS.each do |key|
       attr_accessor key
@@ -24,6 +24,12 @@ module Icosmith
 
   def self.config
     @@config ||= Config.new
+  end
+
+  def self.logger
+    @@logger ||= Logger.new(STDOUT).tap do |log|
+      log.formatter = lambda {|severity, datetime, progname, msg| " - #{msg}\n"}
+    end
   end
 
   def self.configure

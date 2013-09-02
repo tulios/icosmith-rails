@@ -1,3 +1,4 @@
+use_sass: true
 svg_dir: app/assets/fonts/icosmith-font/svg
 font_dir: app/assets/fonts/icosmith-font
 css_dir: app/assets/stylesheets/icosmith-font
