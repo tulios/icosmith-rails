@@ -1,0 +1,6 @@
+use_sass: true
+svg_dir: app/assets/svgs
+font_dir: app/assets/fonts
+css_dir: app/assets/stylesheets
+manifest_dir: config/icosmith
+generate_fonts_url: http://icosmith.com/generate_font

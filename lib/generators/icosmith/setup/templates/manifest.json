@@ -1,6 +1,6 @@
 {
-  "name": "FontSmith Font",
-  "family": "FontSmith Font",
+  "name": "my_font",
+  "family": "my_font",
   "weight": "Regular",
   "ascent": 800,
   "descent": 200,

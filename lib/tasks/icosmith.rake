@@ -7,7 +7,7 @@ namespace :icosmith do
     icosmith_generator.extract_font
   end
 
-  desc "Generate font files with an icosmith server from svg files"
+  desc "Generates font files with an icosmith server from svg files and stores the package at tmp/icosmith"
   task download_and_extract: [:create_svg_zipfile] do
     icosmith_generator.generate_font
   end

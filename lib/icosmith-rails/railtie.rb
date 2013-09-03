@@ -14,15 +14,13 @@ module Icosmith
       config_file = Rails.root.join("config", "icosmith", Icosmith::CONFIG_FILENAME)
       begin
         Icosmith::Config.load(config_file)
-      rescue Exception => e
+      rescue StandardError => e
         handle_configuration_error(e)
       end
     end
 
     def handle_configuration_error(e)
-      puts "There is a configuration error with the current #{Icosmith::CONFIG_FILENAME}."
-      puts e.inspect
-      puts e.message
+      puts "Icosmith is not configured, you need a #{Icosmith::CONFIG_FILENAME} and a #{Icosmith::MANIFEST_FILENAME}"
     end
   end
 end

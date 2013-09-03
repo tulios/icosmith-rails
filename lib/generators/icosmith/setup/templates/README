@@ -1,0 +1,8 @@
+
+How to use:
+
+Generates font files with an icosmith server from svg files and organizes in the project
+rake icosmith:generate
+
+Generates font files with an icosmith server from svg files and stores the package at tmp/icosmith
+rake icosmith:download_and_extract
