@@ -1,5 +1,6 @@
 # Icosmith Rails
 
+Rails integration with an icosmith server.
 Creates a rake task to generate a new font from svg files using [icosmith server](https://github.com/tulios/icosmith)
 
 ## Installation
