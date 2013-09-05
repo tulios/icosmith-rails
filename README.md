@@ -24,6 +24,19 @@ If you are using Rails, use the setup generator
 Otherwise create a `config/icosmith` directory and copy `icosmith.yml` and
 `manifest.json` from [lib/generators/icosmith/setup/templates](lib/generators/icosmith/setup/templates)
 
+If you aren't using Rails, add this to your `Rakefile`:
+
+```ruby
+  begin
+    require 'icosmith-rails'
+    load 'icosmith-rails/tasks/icosmith.rake'
+  rescue LoadError
+    task :icosmith do
+      abort "Icosmith is not available."
+    end
+  end
+```
+
 ## Configuration
 
 `manifest.json`:

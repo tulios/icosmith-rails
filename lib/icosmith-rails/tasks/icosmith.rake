@@ -17,6 +17,11 @@ namespace :icosmith do
   end
 
   def icosmith_generator
-    @generator ||= Icosmith::Generator.new
+    @generator ||= Icosmith::Generator.new(root_path)
+  end
+
+  private
+  def root_path
+    defined?(Rails) ? Rails.root : Dir.getwd
   end
 end

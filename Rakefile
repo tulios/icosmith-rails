@@ -1,6 +1,6 @@
 require "bundler/gem_tasks"
 
-load "lib/tasks/icosmith.rake"
+load "lib/icosmith-rails/tasks/icosmith.rake"
 
 require "rspec/core/rake_task"
 desc "Run all examples"

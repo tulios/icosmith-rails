@@ -5,7 +5,8 @@ module Icosmith
     SVG_ZIPFILENAME   = "svg.zip"
     FONTS_ZIPFILENAME = "fonts.zip"
 
-    def initialize
+    def initialize(root_path)
+      @root_path = root_path
       load_config
       setup_parameters
       create_directories
@@ -90,7 +91,7 @@ module Icosmith
     end
 
     def load_config
-      config_filename = File.join(Rails.root, "config", "icosmith", Icosmith::CONFIG_FILENAME)
+      config_filename = File.join(@root_path, "config", "icosmith", Icosmith::CONFIG_FILENAME)
       begin
         @config = Icosmith::Config.load(config_filename)
       rescue Exception => e
@@ -98,7 +99,7 @@ module Icosmith
         exit 1
       end
 
-      @manifest_full_path = File.join(Rails.root, @config.manifest_dir, Icosmith::MANIFEST_FILENAME)
+      @manifest_full_path = File.join(@root_path, @config.manifest_dir, Icosmith::MANIFEST_FILENAME)
       unless File.readable?(@manifest_full_path)
         puts "Error trying to load manifest file at #{@manifest_full_path}"
         exit 1
@@ -106,11 +107,11 @@ module Icosmith
     end
 
     def setup_parameters
-      @src_dir = File.join(Rails.root, @config.svg_dir)
-      @temp_dir = File.join(Rails.root, "tmp", "icosmith")
+      @src_dir = File.join(@root_path, @config.svg_dir)
+      @temp_dir = File.join(@root_path, "tmp", "icosmith")
       @svg_zipfile = File.join(@temp_dir, SVG_ZIPFILENAME)
-      @css_dir = File.join(Rails.root, @config.css_dir)
-      @font_dir = File.join(Rails.root, @config.font_dir)
+      @css_dir = File.join(@root_path, @config.css_dir)
+      @font_dir = File.join(@root_path, @config.font_dir)
     end
 
     def create_directories

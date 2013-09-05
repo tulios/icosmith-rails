@@ -7,7 +7,7 @@ module Icosmith
     railtie_name :icosmith
 
     rake_tasks do
-      load "tasks/icosmith.rake"
+      load "icosmith-rails/tasks/icosmith.rake"
     end
 
     initializer "icosmith.load-config" do |app|
