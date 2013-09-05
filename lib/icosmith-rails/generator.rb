@@ -16,7 +16,7 @@ module Icosmith
       FileUtils.rm_f(@svg_zipfile)
 
       Icosmith.logger.info "Compressing SVGs"
-      Zip::File.open(@svg_zipfile, Zip::File::CREATE) do |zipfile|
+      Zip::ZipFile.open(@svg_zipfile, Zip::ZipFile::CREATE) do |zipfile|
         Dir.glob("#{@src_dir}#{File::SEPARATOR}*.svg").each do |filename|
           zipfile.add(filename.split(File::SEPARATOR).last, filename)
         end
@@ -83,7 +83,7 @@ module Icosmith
     end
 
     def unzip path, target
-      Zip::File.open(path) do |zip_file|
+      Zip::ZipFile.open(path) do |zip_file|
         zip_file.each do |file|
           zip_file.extract(file, File.join(target, file.name))
         end
