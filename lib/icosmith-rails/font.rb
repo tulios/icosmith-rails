@@ -5,17 +5,18 @@ module Icosmith
     SVG_ZIPFILENAME   = "svg.zip"
     FONTS_ZIPFILENAME = "fonts.zip"
 
-    def initialize root_path, config
+    def initialize root_path, config, font_name = ""
       @root_path = root_path
       @config = config
+      @font_name = font_name
       setup_parameters
-      create_directories
     end
 
     def create_svg_zipfile
+      create_directories
       FileUtils.rm_f(@svg_zipfile)
 
-      Icosmith.logger.info "Compressing SVGs"
+      log("Compressing SVGs")
       Zip::ZipFile.open(@svg_zipfile, Zip::ZipFile::CREATE) do |zipfile|
         Dir.glob("#{@src_dir}#{File::SEPARATOR}*.svg").each do |filename|
           zipfile.add(filename.split(File::SEPARATOR).last, filename)
@@ -26,14 +27,16 @@ module Icosmith
     end
 
     def generate_font
-      Icosmith.logger.info "Sending files to #{@config.generate_fonts_url}"
+      create_directories
+
+      log("Sending files to #{@config.generate_fonts_url}")
       fontfile_contents = RestClient.post(@config.generate_fonts_url, file: File.new(@svg_zipfile))
       filename = fontfile_contents.headers[:content_disposition].scan(/filename="([^"]+)"/).flatten.first
       filename ||= FONTS_ZIPFILENAME
 
       @fonts_zipfile = File.join(@temp_dir, filename)
 
-      Icosmith.logger.info "Writing #{filename}"
+      log("Writing #{filename}")
       File.open(@fonts_zipfile, "w:binary") do |f|
         f.write(fontfile_contents)
       end
@@ -42,7 +45,9 @@ module Icosmith
     end
 
     def extract_font
-      Icosmith.logger.info "Replacing files"
+      create_directories
+
+      log("Replacing files")
       temp_font_path = @fonts_zipfile.gsub(/\.zip$/, '')
       FileUtils.rm_f(temp_font_path)
       FileUtils.mkdir(temp_font_path)
@@ -57,7 +62,7 @@ module Icosmith
       end
 
       FileUtils.mv(File.join(temp_font_path, Icosmith::MANIFEST_FILENAME), @manifest_full_path)
-      FileUtils.remove_dir(@temp_dir)
+      FileUtils.remove_dir(@base_temp_dir)
     end
 
     private
@@ -74,7 +79,7 @@ module Icosmith
 
     def generate_scss path
       scss_path = "#{path}.scss"
-      Icosmith.logger.info "Generating #{scss_path}"
+      log("Generating #{scss_path}")
 
       css_content = File.read path
       css_content.gsub!(/url\('fonts\//, "font-url('")
@@ -91,23 +96,29 @@ module Icosmith
     end
 
     def setup_parameters
-      @manifest_full_path = File.join(@root_path, @config.manifest_dir, Icosmith::MANIFEST_FILENAME)
+      @manifest_full_path = File.join(@root_path, @config.manifest_dir, @font_name, Icosmith::MANIFEST_FILENAME)
       unless File.readable?(@manifest_full_path)
         puts "Error trying to load manifest file at #{@manifest_full_path}"
         exit 1
       end
 
-      @src_dir = File.join(@root_path, @config.svg_dir)
-      @temp_dir = File.join(@root_path, "tmp", "icosmith")
+      @src_dir = File.join(@root_path, @config.svg_dir, @font_name)
+      @base_temp_dir = File.join(@root_path, "tmp", "icosmith")
+      @temp_dir = File.join(@base_temp_dir, @font_name)
       @svg_zipfile = File.join(@temp_dir, SVG_ZIPFILENAME)
       @css_dir = File.join(@root_path, @config.css_dir)
-      @font_dir = File.join(@root_path, @config.font_dir)
+      @font_dir = File.join(@root_path, @config.font_dir, @font_name)
     end
 
     def create_directories
       FileUtils.mkdir_p(@temp_dir)
       FileUtils.mkdir_p(@css_dir)
       FileUtils.mkdir_p(@font_dir)
+    end
+
+    def log message, level = :info
+      message = "[#{@font_name}] #{message}" unless @font_name.empty?
+      Icosmith.logger.send(level, message)
     end
   end
 end

@@ -7,8 +7,18 @@ module Icosmith
       load_config
     end
 
-    def setup_font
-      Icosmith::Font.new(@root_path, @config)
+    def setup_fonts
+      fonts = []
+
+      if @config.fonts
+        @config.fonts.each do |font_name|
+          fonts << Icosmith::Font.new(@root_path, @config, font_name)
+        end
+      else
+        fonts << Icosmith::Font.new(@root_path, @config)
+      end
+
+      fonts
     end
 
     private

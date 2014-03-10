@@ -5,7 +5,7 @@ module Icosmith
   MANIFEST_FILENAME = "manifest.json"
 
   class Config
-    KEYS = [:svg_dir, :font_dir, :css_dir, :manifest_dir, :generate_fonts_url, :use_sass]
+    KEYS = [:svg_dir, :font_dir, :fonts, :css_dir, :manifest_dir, :generate_fonts_url, :use_sass]
 
     KEYS.each do |key|
       attr_accessor key

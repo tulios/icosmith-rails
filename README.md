@@ -53,6 +53,51 @@ You can also configure each parameter individually. Just call `Icosmith.configur
   end
 ```
 
+### Multiple fonts
+
+If you want to use multiple fonts, change the following configurations:
+
+- Edit your `icosmith.yml` file and add a `fonts` parameter, with a list of font names:
+
+```yml
+use_sass: true
+svg_dir: app/assets/svgs
+font_dir: app/assets/fonts
+css_dir: app/assets/stylesheets
+manifest_dir: config/icosmith
+generate_fonts_url: http://icosmith.com/generate_font
+fonts:
+  - my-font1
+  - my-font2
+```
+
+- Create a `manifest.json` file for each font, inside a subdirectory with the font name:
+
+```sh
+config
+└── icosmith
+    ├── my-font1
+    │   └── manifest.json
+    ├── my-font2
+    │   └── manifest.json
+    └── icosmith.yml
+```
+
+- Move each font`s SVG files to a subdirectory with the font name:
+
+```sh
+app/svgs/
+├── my-font1
+│   ├── icon1.svg
+│   ├── icon2.svg
+│   ├── icon3.svg
+│   ├── icon4.svg
+└── my-font2
+    ├── icon5.svg
+    ├── icon6.svg
+    └── icon7.svg
+```
+
 ## Usage
 
     rake icosmith:generate

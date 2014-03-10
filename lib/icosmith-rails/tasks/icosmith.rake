@@ -3,22 +3,32 @@ require "icosmith-rails"
 
 namespace :icosmith do
   desc "Generates font files with an icosmith server from svg files and organizes in the project"
-  task generate: [:create_svg_zipfile, :download_and_extract] do
-    icosmith_font.extract_font
+  task :generate do
+    icosmith_fonts.each do |font|
+      font.create_svg_zipfile
+      font.generate_font
+      font.extract_font
+    end
   end
 
   desc "Generates font files with an icosmith server from svg files and stores the package at tmp/icosmith"
-  task download_and_extract: [:create_svg_zipfile] do
-    icosmith_font.generate_font
+  task :download_and_extract do
+    icosmith_fonts.each do |font|
+      font.create_svg_zipfile
+      font.generate_font
+    end
   end
 
+  desc "Creates a zip file with a manifest and svg files"
   task :create_svg_zipfile do
-    icosmith_font.create_svg_zipfile
+    icosmith_fonts.each do |font|
+      font.create_svg_zipfile
+    end
   end
 
   private
-  def icosmith_font
-    @font ||= Icosmith::Generator.new(root_path).setup_font
+  def icosmith_fonts
+    @fonts ||= Icosmith::Generator.new(root_path).setup_fonts
   end
 
   def root_path
