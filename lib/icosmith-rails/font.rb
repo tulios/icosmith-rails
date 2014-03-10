@@ -107,7 +107,7 @@ module Icosmith
       @temp_dir = File.join(@base_temp_dir, @font_name)
       @svg_zipfile = File.join(@temp_dir, SVG_ZIPFILENAME)
       @css_dir = File.join(@root_path, @config.css_dir)
-      @font_dir = File.join(@root_path, @config.font_dir, @font_name)
+      @font_dir = File.join(@root_path, @config.font_dir)
     end
 
     def create_directories
