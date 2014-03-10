@@ -16,5 +16,6 @@ end
 
 require "icosmith-rails/version"
 require "icosmith-rails/config"
+require "icosmith-rails/font"
 require "icosmith-rails/generator"
 require "icosmith-rails/railtie" if defined?(Rails)
