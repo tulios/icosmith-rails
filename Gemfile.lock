@@ -15,6 +15,7 @@ GEM
     columnize (0.3.6)
     debugger-linecache (1.2.0)
     diff-lcs (1.2.4)
+    fakefs (0.5.1)
     mime-types (1.25)
     rest-client (1.6.7)
       mime-types (>= 1.16)
@@ -34,5 +35,6 @@ PLATFORMS
 
 DEPENDENCIES
   byebug
+  fakefs
   icosmith-rails!
   rspec
