@@ -2,6 +2,7 @@
 
 require 'spec_helper'
 require 'fakefs/spec_helpers'
+require 'yaml'
 
 describe Icosmith::Config do
   subject do
