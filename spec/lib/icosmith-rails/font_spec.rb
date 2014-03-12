@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 require 'tmpdir'
-require 'zip/zip'
+require 'zip'
 
 describe Icosmith::Font do
   let!(:root_path) do
@@ -38,7 +38,7 @@ describe Icosmith::Font do
     it "creates a zip file with the font .svg files and manifest.json" do
       subject.create_svg_zipfile
 
-      Zip::ZipFile.open("#{root_path}/tmp/icosmith/my-font/svg.zip") do |zip_file|
+      Zip::File.open("#{root_path}/tmp/icosmith/my-font/svg.zip") do |zip_file|
         zip_file.map(&:name).should eql %w{icon1.svg icon2.svg manifest.json}
       end
     end

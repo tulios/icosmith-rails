@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-require "zip/zip"
+require "zip"
 require "rest_client"
 require "json"
 require "logger"
