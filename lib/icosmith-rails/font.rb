@@ -50,7 +50,7 @@ module Icosmith
       log("Replacing files")
       temp_font_path = @fonts_zipfile.gsub(/\.zip$/, '')
       FileUtils.rm_f(temp_font_path)
-      FileUtils.mkdir(temp_font_path)
+      FileUtils.mkdir_p(File.join(temp_font_path, "fonts"))
       FileUtils.mkdir_p(@font_dir)
       FileUtils.mkdir_p(@css_dir)
 
