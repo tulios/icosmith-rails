@@ -54,8 +54,8 @@ module Icosmith
       FileUtils.mkdir_p(@font_dir)
       FileUtils.mkdir_p(@css_dir)
 
-      unzip @fonts_zipfile, temp_font_path
-      copy_css temp_font_path
+      unzip(@fonts_zipfile, temp_font_path)
+      copy_css(temp_font_path)
 
       Dir.glob("#{temp_font_path}#{File::SEPARATOR}fonts#{File::SEPARATOR}*.{ttf,woff,svg,eot,afm}").each do |file|
         FileUtils.mv(file, @font_dir)

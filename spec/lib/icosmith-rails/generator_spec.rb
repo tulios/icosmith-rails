@@ -3,7 +3,7 @@
 require 'spec_helper'
 
 describe Icosmith::Generator do
-  describe ".setup_fonts" do
+  describe "#setup_fonts" do
     before do
       Icosmith::Config.should_receive(:load).
         with("path/config/icosmith/icosmith.yml").and_return(config)
