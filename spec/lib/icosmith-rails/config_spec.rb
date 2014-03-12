@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 require 'spec_helper'
-require 'fakefs/spec_helpers'
 require 'yaml'
 
 describe Icosmith::Config do
@@ -18,14 +17,20 @@ describe Icosmith::Config do
   end
 
   describe ".load" do
-    include FakeFS::SpecHelpers
+    let!(:root_path) do
+      Dir.mktmpdir
+    end
 
     before do
-      File.write("config.yml", "css_dir: path/to/css\nuse_sass: true")
+      File.write("#{root_path}/config.yml", "css_dir: path/to/css\nuse_sass: true")
+    end
+
+    after do
+      FileUtils.rm_rf(root_path)
     end
 
     it "sets the configuration values from a file" do
-      config = Icosmith::Config.load("config.yml")
+      config = Icosmith::Config.load("#{root_path}/config.yml")
 
       config.css_dir.should eql "path/to/css"
       config.use_sass.should be_true
