@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    icosmith-rails (0.3.0)
+    icosmith-rails (0.3.1)
       rest-client (~> 1.6.7)
       rubyzip
       thor (~> 0.18.1)
